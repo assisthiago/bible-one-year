@@ -1,0 +1,15 @@
+<nav class="navbar navbar-expand navbar-light navbar-bg">
+    <a class="sidebar-toggle">
+        <i class="hamburger align-self-center"></i>
+    </a>
+
+    <form class="d-none d-sm-inline-block" action="/articles" method="post">
+        {% csrf_token %}
+        <div class="input-group input-group-navbar">
+            <input type="text" class="form-control" placeholder="Procurar artigos..." aria-label="Search" name="headline" required>
+            <button class="btn" type="submit">
+                <i class="align-middle" data-feather="search"></i>
+            </button>
+        </div>
+    </form>
+</nav>

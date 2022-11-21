@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<h1 class="h1 mb-3">Versículos</h1>
+
+<div class="row">
+    {% for i in '01234567890123456789'|make_list %}
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card">
+
+                <img class="card-img-top" src="https://picsum.photos/1280/720">
+
+                <div class="card-header px-4 pt-4">
+                    <h5 class="card-title mb-0">Gen 1-2; Ps 1 & Mt 1</h5>
+                    <div class="badge bg-primary my-2">Dia 1</div>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item px-4 pb-4">
+                        <p class="mb-2 fw-bold">
+                            <a href="versicles/{{ versicle.id }}" class="btn btn-sm btn-primary float-end">Ler</a>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    {% endfor %}
+    <div class="col-12 text-center">
+        <div class="btn-group btn-group-sm mb-4" role="group" aria-label="Small button group">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">
+                    <i class="align-middle" data-feather="arrow-left"></i>
+                </a>
+            {% else %}
+                <a class="btn btn-secondary disabled" aria-hidden="true">
+                    <i class="align-middle" data-feather="arrow-left"></i>
+                </a>
+            {% endif %}
+
+            {% if page_obj.number|add:'-4' > 1 %}
+                <a href="?page={{ page_obj.number|add:'-5' }}">&hellip;</a>
+            {% endif %}
+
+            {% for i in page_obj.paginator.page_range %}
+                {% if page_obj.number == i %}
+                    <a class="btn btn-secondary active">{{ i }}</a>
+                {% elif i > page_obj.number|add:'-5' and i < page_obj.number|add:'5' %}
+                    <a href="?page={{ i }}" class="btn btn-secondary">
+                        {{ i }}
+                    </a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.number|add:'4' > i %}
+                <a href="?page={{ page_obj.number|add:'5' }}" class="btn btn-secondary">&hellip;</a>
+            {% endif %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">
+                    <i class="align-middle" data-feather="arrow-right"></i>
+                </a>
+            {% else %}
+                <a class="btn btn-secondary disabled" aria-hidden="true">
+                    <i class="align-middle" data-feather="arrow-right"></i>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

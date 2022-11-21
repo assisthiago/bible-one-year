@@ -1,0 +1,7 @@
+dj-database-url
+dj-static
+Django
+Pillow
+python-decouple
+psycopg2-binary
+gunicorn

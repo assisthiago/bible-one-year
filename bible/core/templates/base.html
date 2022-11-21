@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Bootlab">
+
+    <title>Bible 1 Year</title>
+
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <link href="{% static 'css/light.css' %}" rel="stylesheet">
+</head>
+
+<body data-theme="light" data-layout="fluid" data-sidebar-position="left" data-sidebar-behavior="sticky">
+	<div class="wrapper">
+		{% include 'components/sidebar.html' %}
+
+		<div class="main">
+			{% include 'components/navbar.html' %}
+
+			<main class="content">
+				<div class="container-fluid p-0">
+
+                    {% block content %}
+                    {% endblock content %}
+
+				</div>
+			</main>
+		</div>
+	</div>
+
+	<script src="{% static 'js/app.js' %}"></script>
+
+</body>
+
+</html>
