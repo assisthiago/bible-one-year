@@ -47,9 +47,8 @@ class SignInPostValidTest(TestCase):
             email='thiago@assis.com')
 
         data = {'email': user.email, 'password': user.password}
-
         self.resp = self.client.post(r('sign-in'), data)
 
-    # def test_post(self):
-    #     """Valid POST should redirect to /home/"""
-    #     self.assertRedirects(self.resp, r('home'))
+    def test_post(self):
+        """Valid POST should redirect to /home/"""
+        self.assertRedirects(self.resp, r('home'))
