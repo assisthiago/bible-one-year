@@ -1,8 +1,8 @@
 from django.shortcuts import render
 
 
-def signin(request):
-    return render(request, 'sign-in.html')
+def sign_in(request):
+    return render(request, 'sign_in.html')
 
 
 def signup(request):
