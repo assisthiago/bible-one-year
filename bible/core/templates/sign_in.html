@@ -36,16 +36,18 @@
                                         <form action="." method="post">
                                             {% csrf_token %}
                                             <div class="mb-3">
-                                                <label class="form-label">E-mail</label>
-                                                <input class="form-control form-control-lg" type="email" name="email"
-                                                    placeholder="Enter your email" />
+                                                <label class="form-label">{{ form.email.label }}</label>
+                                                {{ form.email.errors }}
+                                                {{ form.email }}
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label">Senha</label>
-                                                <input class="form-control form-control-lg" type="password" name="password" placeholder="Enter your password" />
+                                                <label class="form-label">{{ form.password.label }}</label>
+                                                {{ form.password.errors }}
+                                                {{ form.password }}
                                                 <small>
                                                     <a href="/reset-password">Esqueci minha senha</a>
                                                 </small>
+                                            </div>
                                             </div>
                                             <div class="text-center mt-3 mb-3">
                                                 <button type="submit" class="btn btn-lg btn-primary">Entrar</button>
