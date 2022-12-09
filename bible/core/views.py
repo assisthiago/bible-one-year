@@ -1,8 +1,10 @@
 from django.shortcuts import render
 
+from bible.core.forms import SignInForm
+
 
 def sign_in(request):
-    return render(request, 'sign_in.html')
+    return render(request, 'sign_in.html', {'form': SignInForm()})
 
 
 def signup(request):
