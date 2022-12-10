@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, resolve_url as r
+from django.shortcuts import get_object_or_404, render, resolve_url as r
 
 from bible.core.forms import SignInForm, SignUpForm
 
@@ -49,6 +49,29 @@ def sign_up(request):
         return HttpResponseRedirect(r('sign-in'))
 
     return render(request, 'sign_up.html', {'form': SignUpForm()})
+
+
+def reset_password(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+
+        if not form.is_valid():
+            return render(request, 'reset-password.html', {'form': form})
+
+
+        try:
+            user = get_object_or_404(User, email=form.cleaned_data['email'])
+            user.password = form.cleaned_data['password']
+            user.save()
+
+            messages.success(request, 'Senha atualizada com sucesso')
+            return HttpResponseRedirect(r('sign-in'))
+
+        except:
+            messages.error(request, 'Usuário não encontrado')
+            return render(request, 'reset-password.html', {'form': form})
+
+    return render(request, 'reset-password.html', {'form': SignUpForm()})
 
 
 def home(request):

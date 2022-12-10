@@ -5,7 +5,7 @@ from django.test import TestCase
 class UserTest(TestCase):
     def setUp(self):
         self.user = User.objects.create(
-            username='thiago-assis',
+            username='thiago@assis.com',
             password='1234567890',
             email='thiago@assis.com')
 
@@ -13,7 +13,7 @@ class UserTest(TestCase):
         self.assertTrue(User.objects.exists())
 
     def test_username(self):
-        self.assertEqual('thiago-assis', self.user.username)
+        self.assertEqual('thiago@assis.com', self.user.username)
 
     def test_email(self):
         self.assertEqual('thiago@assis.com', self.user.email)
