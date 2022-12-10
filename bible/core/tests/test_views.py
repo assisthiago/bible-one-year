@@ -1,4 +1,4 @@
-import unittest
+from unittest import SkipTest
 
 from django.contrib.auth.models import User
 from django.shortcuts import resolve_url as r
@@ -51,7 +51,7 @@ class SignInPostValidTest(TestCase):
         data = {'email': user.email, 'password': user.password}
         self.resp = self.client.post(r('sign-in'), data)
 
-    @unittest.SkipTest
+    @SkipTest
     def test_post(self):
         """Valid POST should redirect to /home/"""
         self.assertRedirects(self.resp, r('home'))
@@ -105,21 +105,21 @@ class SignUpGetTest(TestCase):
 
 class SignUpPostValidTest(TestCase):
     def setUp(self):
-        data = {
+        self.data = {
             'email': 'thiago@assis.com',
             'password': '1234567890',
             'password_confirmation': '1234567890'
         }
-        self.resp = self.client.post(r('sign-up'), data)
 
     def test_post(self):
         """Valid POST should redirect to /sign-in/"""
-        self.assertRedirects(self.resp, r('sign-in'))
+        resp = self.client.post(r('sign-up'), self.data)
+        self.assertRedirects(resp, r('sign-in'))
 
-    @unittest.SkipTest
     def test_message(self):
         """Valid POST should show a success message"""
-        self.assertContains(self.resp, 'Conta criada com sucesso')
+        resp = self.client.post(r('sign-up'), self.data, follow=True)
+        self.assertContains(resp, 'Conta criada com sucesso')
 
 
 class SignUpPostInvalidTest(TestCase):
