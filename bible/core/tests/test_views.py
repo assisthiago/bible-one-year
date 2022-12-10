@@ -35,26 +35,24 @@ class SignInGetTest(TestCase):
         self.assertContains(self.resp, 'csrfmiddlewaretoken')
 
     def test_reset_password_link(self):
-        self.assertContains(self.resp, 'href="/reset-password"')
+        self.assertContains(self.resp, 'href="/reset-password/"')
 
     def test_sign_up_link(self):
-        self.assertContains(self.resp, 'href="/sign-up"')
+        self.assertContains(self.resp, 'href="/sign-up/"')
 
 
 class SignInPostValidTest(TestCase):
-    def setUp(self):
-        user = User.objects.create_user(
-            username='thiago@assis.com',
-            email='thiago@assis.com',
-            password='flamengo1')
-
-        data = {'email': user.email, 'password': user.password}
-        self.resp = self.client.post(r('sign-in'), data)
-
-    @SkipTest
     def test_post(self):
         """Valid POST should redirect to /home/"""
-        self.assertRedirects(self.resp, r('home'))
+        User.objects.create_user(
+            'thiago@assis.com',
+            'thiago@assis.com',
+            'flamengo1')
+
+        data = {'email': 'thiago@assis.com', 'password': 'flamengo1'}
+        resp = self.client.post(r('sign-in'), data)
+
+        self.assertRedirects(resp, r('home'))
 
 
 class SignInPostInvalidTest(TestCase):
@@ -100,7 +98,7 @@ class SignUpGetTest(TestCase):
         self.assertContains(self.resp, 'csrfmiddlewaretoken')
 
     def test_sign_in_link(self):
-        self.assertContains(self.resp, 'href="/sign-in"')
+        self.assertContains(self.resp, 'href="/sign-in/"')
 
 
 class SignUpPostValidTest(TestCase):
@@ -182,7 +180,7 @@ class ResetPasswordGetTest(TestCase):
         self.assertContains(self.resp, 'csrfmiddlewaretoken')
 
     def test_sign_in_link(self):
-        self.assertContains(self.resp, 'href="/sign-in"')
+        self.assertContains(self.resp, 'href="/sign-in/"')
 
 
 class ResetPasswordPostValidTest(TestCase):
@@ -206,7 +204,7 @@ class ResetPasswordPostValidTest(TestCase):
     def test_new_password(self):
         self.client.post(r('reset-password'), self.data)
         user = User.objects.get(email=self.user.email)
-        self.assertEqual('1flamengo', user.password)
+        self.assertNotEqual(self.user.password, user.password)
 
     def test_message(self):
         """Valid POST should show a success message"""
@@ -238,3 +236,12 @@ class ResetPasswordPostInvalidTest(TestCase):
     def test_user_not_found(self):
         resp = self.client.post(r('reset-password'), self.data)
         self.assertContains(resp, 'Usuário não encontrado.')
+
+
+class HomeGetTest(TestCase):
+    def test_not_logged_in(self):
+        resp = self.client.get(r('home'))
+        self.assertRedirects(resp, f'{r("sign-in")}?next={r("home")}')
+
+    def test_get(self):
+        pass

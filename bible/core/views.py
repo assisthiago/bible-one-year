@@ -1,5 +1,6 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, resolve_url as r
@@ -15,7 +16,7 @@ def sign_in(request):
             return render(request, 'sign_in.html', {'form': form})
 
         user = authenticate(
-            request=request,
+            request,
             username=form.cleaned_data['email'],
             password=form.cleaned_data['password'])
 
@@ -46,11 +47,15 @@ def sign_up(request):
             messages.error(request, 'Usuário já existe.')
             return render(request, 'sign_up.html', {'form': form})
 
-
         messages.success(request, 'Conta criada com sucesso.')
         return HttpResponseRedirect(r('sign-in'))
 
     return render(request, 'sign_up.html', {'form': SignUpForm()})
+
+
+def sign_out(request):
+    logout(request)
+    return HttpResponseRedirect(r('sign-in'))
 
 
 def reset_password(request):
@@ -62,7 +67,7 @@ def reset_password(request):
 
         try:
             user = get_object_or_404(User, email=form.cleaned_data['email'])
-            user.password = form.cleaned_data['password']
+            user.set_password(form.cleaned_data['password'])
             user.save()
 
             messages.success(request, 'Senha atualizada com sucesso.')
@@ -75,5 +80,6 @@ def reset_password(request):
     return render(request, 'reset-password.html', {'form': SignUpForm()})
 
 
+@login_required
 def home(request):
     return render(request, 'index.html')
