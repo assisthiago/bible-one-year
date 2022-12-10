@@ -151,6 +151,20 @@ class SignUpPostInvalidTest(TestCase):
         self.assertContains(resp, 'Usuário já existe.')
 
 
+class SignOutGetTest(TestCase):
+    def test_get(self):
+        User.objects.create_user(
+                'thiago@assis.com',
+                'thiago@assis.com',
+                'flamengo1')
+
+        data = {'email': 'thiago@assis.com', 'password': 'flamengo1'}
+        self.client.post(r('sign-in'), data)
+
+        resp = self.client.post(r('sign-out'))
+        self.assertRedirects(resp, r('sign-in'))
+
+
 class ResetPasswordGetTest(TestCase):
     def setUp(self):
         self.resp = self.client.get(r('reset-password'))
