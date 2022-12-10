@@ -14,16 +14,25 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
 
-    <link href="{% static 'css/light.css' %}" rel="stylesheet">
+    <link href="{% static 'css/dark.css' %}" rel="stylesheet">
 </head>
 
-<body data-theme="default" data-layout="fluid" data-sidebar-position="left" data-sidebar-behavior="sticky">
+<body data-theme="dark" data-layout="fluid" data-sidebar-position="left" data-sidebar-behavior="sticky">
     <div class="main d-flex justify-content-center w-100">
         <main class="content d-flex p-0">
             <div class="container d-flex flex-column">
                 <div class="row h-100">
                     <div class="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">
                         <div class="d-table-cell align-middle">
+
+                            {% if messages %}
+                                {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    <div class="alert-message">{{ message }}</div>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
 
                             <div class="text-center mt-4">
                                 <h1 class="h2">Crie sua conta</h1>
@@ -34,37 +43,31 @@
                                 <div class="card-body">
                                     <div class="m-sm-4">
                                         <form action="/sign-up" method="post">
+                                            {% csrf_token %}
                                             <div class="mb-3">
-                                                <label class="form-label">Nome</label>
-                                                <input class="form-control form-control-lg" type="text" name="name"
-                                                    placeholder="Enter your name" />
+                                                <label class="form-label">{{ form.email.label }}</label>
+                                                {{ form.email }}
+                                                {% for error in form.email.errors %}
+                                                    <label class="error small form-text invalid-feedback">{{ error }}</label>
+                                                {% endfor %}
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label">Sobrenome</label>
-                                                <input class="form-control form-control-lg" type="text" name="company"
-                                                    placeholder="Enter your company name" />
+                                                <label class="form-label">{{ form.password.label }}</label>
+                                                {{ form.password }}
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label">E-mail</label>
-                                                <input class="form-control form-control-lg" type="email" name="email"
-                                                    placeholder="Enter your email" />
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label">Senha</label>
-                                                <input class="form-control form-control-lg" type="password"
-                                                    name="password" placeholder="Enter password" />
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label">Confirmar senha</label>
-                                                <input class="form-control form-control-lg" type="password"
-                                                    name="password" placeholder="Enter password" />
+                                                <label class="form-label">{{ form.password_confirmation.label }}</label>
+                                                {{ form.password_confirmation }}
+                                                {% for error in form.non_field_errors %}
+                                                    <label class="error small form-text invalid-feedback">{{ error }}</label>
+                                                {% endfor %}
                                             </div>
                                             <div class="text-center mt-3 mb-3">
                                                 <button type="submit" class="btn btn-lg btn-primary">Cadastrar</button>
                                             </div>
                                             <div class="text-center">
                                                 <small>
-                                                    <a href="/sign-in">Voltar</a>
+                                                    <a href="{% url 'sign-in' %}">Voltar</a>
                                                 </small>
                                             </div>
                                         </form>
