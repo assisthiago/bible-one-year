@@ -1,3 +1,5 @@
+import unittest
+
 from django.contrib.auth.models import User
 from django.shortcuts import resolve_url as r
 from django.test import TestCase
@@ -41,14 +43,26 @@ class SignInGetTest(TestCase):
 
 class SignInPostValidTest(TestCase):
     def setUp(self):
-        user = User.objects.create(
-            username='thiago-assis',
-            password='1234567890',
-            email='thiago@assis.com')
+        user = User.objects.create_user(
+            'thiago@assis.com',
+            'thiago@assis.com',
+            '1234567890')
 
         data = {'email': user.email, 'password': user.password}
         self.resp = self.client.post(r('sign-in'), data)
 
+
+    @unittest.SkipTest
     def test_post(self):
         """Valid POST should redirect to /home/"""
         self.assertRedirects(self.resp, r('home'))
+
+
+class SignInPostInvalidTest(TestCase):
+    def setUp(self):
+        data = {'email': 'invalid@user.com', 'password': '1234567890'}
+        self.resp = self.client.post(r('sign-in'), data)
+
+    def test_post(self):
+        """Invalid POST should show an error message"""
+        self.assertContains(self.resp, 'E-mail ou senha incorreta')

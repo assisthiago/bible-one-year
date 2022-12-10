@@ -25,6 +25,15 @@
                     <div class="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">
                         <div class="d-table-cell align-middle">
 
+                            {% if messages %}
+                                {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    <div class="alert-message">{{ message }}</div>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+
                             <div class="text-center mt-4">
                                 <h1 class="h2">Bem-vindo!</h1>
                                 <p class="lead">Entre na sua conta para continuar.</p>
@@ -33,21 +42,21 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="m-sm-4">
-                                        <form action="." method="post">
+                                        <form action="{% url 'sign-in' %}" method="post">
                                             {% csrf_token %}
                                             <div class="mb-3">
                                                 <label class="form-label">{{ form.email.label }}</label>
-                                                {{ form.email.errors }}
                                                 {{ form.email }}
+                                                {% for error in form.email.errors %}
+                                                    <label class="error small form-text invalid-feedback">{{ error }}</label>
+                                                {% endfor %}
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">{{ form.password.label }}</label>
-                                                {{ form.password.errors }}
                                                 {{ form.password }}
                                                 <small>
                                                     <a href="/reset-password">Esqueci minha senha</a>
                                                 </small>
-                                            </div>
                                             </div>
                                             <div class="text-center mt-3 mb-3">
                                                 <button type="submit" class="btn btn-lg btn-primary">Entrar</button>
@@ -69,7 +78,7 @@
         </main>
     </div>
 
-    <script src="js/app.js"></script>
+    <script src="{% static 'js/app.js' %}"></script>
 
 </body>
 
