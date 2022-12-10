@@ -1,10 +1,14 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
 
 
 class SignInForm(forms.Form):
     email = forms.EmailField(label='E-mail')
-    password = forms.CharField(label='Senha', widget=forms.PasswordInput())
+    password = forms.CharField(
+        label='Senha',
+        widget=forms.PasswordInput(),
+        validators=[validate_password])
 
     class Meta:
         model = User
@@ -13,6 +17,7 @@ class SignInForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.fields['email'].widget.attrs['class'] = 'form-control form-control-lg'
         self.fields['email'].widget.attrs['placeholder'] = 'Entre com o seu e-mail'
+        self.fields['email'].widget.attrs['autofocus'] = True
         self.fields['password'].widget.attrs['class'] = 'form-control form-control-lg'
         self.fields['password'].widget.attrs['placeholder'] = 'Entre com sua senha'
 
@@ -30,7 +35,7 @@ class SignUpForm(SignInForm):
 
         if password and password_confirmation:
             if password != password_confirmation:
-                raise forms.ValidationError('Senhas diferentes')
+                raise forms.ValidationError('Senha informada é diferente da anterior.')
 
         return cleaned_data
 

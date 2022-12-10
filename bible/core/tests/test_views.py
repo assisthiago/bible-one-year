@@ -44,9 +44,9 @@ class SignInGetTest(TestCase):
 class SignInPostValidTest(TestCase):
     def setUp(self):
         user = User.objects.create_user(
-            'thiago@assis.com',
-            'thiago@assis.com',
-            '1234567890')
+            username='thiago@assis.com',
+            email='thiago@assis.com',
+            password='flamengo1')
 
         data = {'email': user.email, 'password': user.password}
         self.resp = self.client.post(r('sign-in'), data)
@@ -60,15 +60,15 @@ class SignInPostValidTest(TestCase):
 class SignInPostInvalidTest(TestCase):
     def test_post(self):
         """Invalid POST should show an error message"""
-        data = {'email': 'invalid@user.com', 'password': '1234567890'}
+        data = {'email': 'invalid@user.com', 'password': 'flamengo1'}
         resp = self.client.post(r('sign-in'), data)
-        self.assertContains(resp, 'E-mail ou senha incorreta')
+        self.assertContains(resp, 'E-mail ou senha incorreta.')
 
     def test_email_errors(self):
         """Invalid email should return an error"""
         data = {'email': 'invalid@email', 'password': '1234567890'}
         resp = self.client.post(r('sign-in'), data)
-        self.assertContains(resp, 'Informe um endereço de email válido')
+        self.assertContains(resp, 'Informe um endereço de email válido.')
 
 
 class SignUpGetTest(TestCase):
@@ -107,8 +107,8 @@ class SignUpPostValidTest(TestCase):
     def setUp(self):
         self.data = {
             'email': 'thiago@assis.com',
-            'password': '1234567890',
-            'password_confirmation': '1234567890'
+            'password': 'flamengo1',
+            'password_confirmation': 'flamengo1'
         }
 
     def test_post(self):
@@ -119,29 +119,29 @@ class SignUpPostValidTest(TestCase):
     def test_message(self):
         """Valid POST should show a success message"""
         resp = self.client.post(r('sign-up'), self.data, follow=True)
-        self.assertContains(resp, 'Conta criada com sucesso')
+        self.assertContains(resp, 'Conta criada com sucesso.')
 
 
 class SignUpPostInvalidTest(TestCase):
     def setUp(self):
         self.data = dict(
             email='thiago@assis.com',
-            password='1234567890',
-            password_confirmation='1234567890')
+            password='flamengo1',
+            password_confirmation='flamengo1')
 
     def test_email_errors(self):
         """Invalid email should return an error"""
         data = dict(self.data, email='invalid@email')
 
         resp = self.client.post(r('sign-up'), data)
-        self.assertContains(resp, 'Informe um endereço de email válido')
+        self.assertContains(resp, 'Informe um endereço de email válido.')
 
     def test_password_confirmantion_errors(self):
         """Invalid password_confirmantion should return an error"""
         data = dict(self.data, password_confirmation='0987654321')
 
         resp = self.client.post(r('sign-up'), data)
-        self.assertContains(resp, 'Senhas diferentes')
+        self.assertContains(resp, 'Senha informada é diferente da anterior.')
 
     def test_duplicate(self):
         User.objects.create_user(
@@ -150,7 +150,7 @@ class SignUpPostInvalidTest(TestCase):
             self.data['password'])
 
         resp = self.client.post(r('sign-up'), self.data)
-        self.assertContains(resp, 'Usuário existente')
+        self.assertContains(resp, 'Usuário já existe.')
 
 
 class ResetPasswordGetTest(TestCase):
@@ -190,12 +190,12 @@ class ResetPasswordPostValidTest(TestCase):
         self.user = User.objects.create_user(
             'thiago@assis.com',
             'thiago@assis.com',
-            '1234567890')
+            'flamengo1')
 
         self.data = {
             'email': 'thiago@assis.com',
-            'password': '0987654321',
-            'password_confirmation': '0987654321'
+            'password': '1flamengo',
+            'password_confirmation': '1flamengo'
         }
 
     def test_post(self):
@@ -206,35 +206,35 @@ class ResetPasswordPostValidTest(TestCase):
     def test_new_password(self):
         self.client.post(r('reset-password'), self.data)
         user = User.objects.get(email=self.user.email)
-        self.assertEqual('0987654321', user.password)
+        self.assertEqual('1flamengo', user.password)
 
     def test_message(self):
         """Valid POST should show a success message"""
         resp = self.client.post(r('reset-password'), self.data, follow=True)
-        self.assertContains(resp, 'Senha atualizada com sucesso')
+        self.assertContains(resp, 'Senha atualizada com sucesso.')
 
 
 class ResetPasswordPostInvalidTest(TestCase):
     def setUp(self):
         self.data = dict(
             email='thiago@assis.com',
-            password='1234567890',
-            password_confirmation='1234567890')
+            password='flamengo1',
+            password_confirmation='flamengo1')
 
     def test_email_errors(self):
         """Invalid email should return an error"""
         data = dict(self.data, email='invalid@email')
 
         resp = self.client.post(r('reset-password'), data)
-        self.assertContains(resp, 'Informe um endereço de email válido')
+        self.assertContains(resp, 'Informe um endereço de email válido.')
 
     def test_password_confirmantion_errors(self):
         """Invalid password_confirmantion should return an error"""
         data = dict(self.data, password_confirmation='0987654321')
 
         resp = self.client.post(r('reset-password'), data)
-        self.assertContains(resp, 'Senhas diferentes')
+        self.assertContains(resp, 'Senha informada é diferente da anterior.')
 
     def test_user_not_found(self):
         resp = self.client.post(r('reset-password'), self.data)
-        self.assertContains(resp, 'Usuário não encontrado')
+        self.assertContains(resp, 'Usuário não encontrado.')
