@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from bible.core.models import Book, Versicle
+from bible.core.models import Versicle
 
 
 class UserTest(TestCase):
@@ -24,31 +24,17 @@ class UserTest(TestCase):
         self.assertEqual('1234567890', self.user.password)
 
 
-class BookTest(TestCase):
-    def setUp(self):
-        self.book = Book.objects.create(name='gênesis', abbreviation='gn')
-
-    def test_book(self):
-        self.assertTrue(Book.objects.exists())
-
-    def test_name(self):
-        self.assertEqual('Gênesis', str(self.book))
-
-
 class VersicleTest(TestCase):
     def setUp(self):
-        book = Book.objects.create(name='gênesis', abbreviation='gn')
-
         self.versicle = Versicle.objects.create(
+            book='gênesis',
+            book_abbreviation='gn',
             chapter=1,
             number=1,
-            text='No princípio, Deus criou os céus e a terra.',
-            book=book)
+            text='No princípio, Deus criou os céus e a terra.')
 
-    def test_book(self):
+    def test_versicle(self):
         self.assertTrue(Versicle.objects.exists())
 
     def test_name(self):
-        self.assertEqual(
-            '1. 1. No princípio, Deus criou os céus e a terra.',
-            str(self.versicle))
+        self.assertEqual('Gn 1:1', str(self.versicle))

@@ -1,13 +1,11 @@
 from django.contrib import admin
 
-from bible.core.models import Book, Versicle
-
-
-@admin.register(Book)
-class BookModelAdmin(admin.ModelAdmin):
-    pass
+from bible.core.models import Versicle
 
 
 @admin.register(Versicle)
 class VersicleModelAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['versicle', 'book', 'book_abbreviation', 'chapter', 'number']
+
+    def versicle(selg, obj):
+        return str(obj)

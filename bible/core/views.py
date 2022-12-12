@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, resolve_url as r
 
 from bible.core.forms import SignInForm, SignUpForm
+from bible.core.models import Versicle
 
 
 def sign_in(request):
@@ -82,4 +83,5 @@ def reset_password(request):
 
 @login_required
 def home(request):
-    return render(request, 'index.html')
+    versicles = Versicle.objects.all()
+    return render(request, 'index.html', {'versicles': versicles})
