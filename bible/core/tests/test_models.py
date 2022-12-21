@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from bible.core.models import Versicle
+from bible.core.models import Versicle, Lection
 
 
 class UserTest(TestCase):
@@ -26,12 +26,14 @@ class UserTest(TestCase):
 
 class VersicleTest(TestCase):
     def setUp(self):
+        lection = Lection.objects.create(order=1)
         self.versicle = Versicle.objects.create(
             book='gênesis',
             book_abbreviation='gn',
             chapter=1,
             number=1,
-            text='No princípio, Deus criou os céus e a terra.')
+            text='No princípio, Deus criou os céus e a terra.',
+            lection=lection)
 
     def test_versicle(self):
         self.assertTrue(Versicle.objects.exists())

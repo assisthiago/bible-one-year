@@ -5,7 +5,7 @@ from django.shortcuts import resolve_url as r
 from django.test import TestCase
 
 from bible.core.forms import SignInForm, SignUpForm
-from bible.core.models import Versicle
+from bible.core.models import Versicle, Lection
 
 
 class SignInGetTest(TestCase):
@@ -259,12 +259,14 @@ class HomeGetTest(TestCase):
         self.assertRedirects(resp, f'{r("sign-in")}?next={r("home")}')
 
     def test_get(self):
+        lection = Lection.objects.create(order=1)
         Versicle.objects.create(
             book='gênesis',
             book_abbreviation='gn',
             chapter=1,
             number=1,
-            text='No princípio, Deus criou os céus e a terra.')
+            text='No princípio, Deus criou os céus e a terra.',
+            lection=lection)
 
         user = User.objects.create_user(
             'thiago@assis.com',

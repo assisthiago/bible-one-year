@@ -1,0 +1,80 @@
+{% extends "admin/base_site.html" %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="/admin/">Início</a>
+    › <a href="/admin/core/">Core</a>
+    › <a href="/admin/core/versicle/">Versículos</a>
+    › {{ title }}
+    </div>
+
+{% endblock %}
+
+
+{% block content %}
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'admin/css/forms.css' %}">
+
+    <div id="content-main">
+        <form action="" method="post" id="versicle_in_lection">
+            {% csrf_token %}
+
+            <div>
+                <fieldset class="module aligned">
+                    <div class="form-row field-book">
+                        <div>
+                            <label class="required" for="id_book">Livro:</label>
+                            <input type="text" value="{{ queryset.first.book }}" class="vTextField" maxlength="150" readonly id="id_book">
+                        </div>
+                    </div>
+                    <div class="form-row field-chapter">
+                        <div>
+                            <label class="required" for="id_chapters">Capítulos:</label>
+                            {% if queryset.first.chapter == queryset.last.chapter %}
+                                <input type="text" value="{{ queryset.first.chapter }}" class="vTextField" maxlength="150" readonly id="id_chapters">
+                            {% else %}
+                                <input type="text" value="{{ queryset.first.chapter }} - {{ queryset.last.chapter }}" class="vTextField" maxlength="150" readonly id="id_chapters">
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="form-row field-number">
+                        <div>
+                            <label class="required" for="id_numbers">Versículos:</label>
+                            {% if queryset.first.number == queryset.last.number %}
+                                <input type="text" value="{{ queryset.first.number }}" class="vTextField" maxlength="150" readonly id="id_numbers">
+                            {% else %}
+                                <input type="text" value="{{ queryset.first.number }} - {{ queryset.last.number }}" class="vTextField" maxlength="150" readonly id="id_numbers">
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="form-row field-lection">
+                        <div>
+                            <label class="required" for="id_lection">Leitura</label>
+                            <select name="lection" id="id_lection" required="">
+                                <option value="" selected="">---------</option>
+                                {% for lection in lections %}
+                                    <option value="{{ lection.order }}">Dia {{ lection.order }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+
+                {% for obj in queryset %}
+                    <input type="hidden" name="_selected_action" value="{{ obj.pk }}">
+                {% endfor%}
+
+                <div class="submit-row">
+                    <input type="hidden" name="action" value="{{ action_name }}"/>
+                    <input type="hidden" name="post" value="yes"/>
+
+                    <input type="submit" value="Salvar" class="default"/>
+                    <p class="deletelink-box"><a href="{% url 'admin:core_versicle_changelist' %}" class="deletelink">Cancelar</a></p>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+{% endblock %}
