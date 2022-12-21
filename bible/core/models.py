@@ -2,8 +2,7 @@ from django.db import models
 
 
 class Lection(models.Model):
-    order = models.IntegerField()
-    completed = models.BooleanField(default=False)
+    order = models.IntegerField('ordem')
 
     class Meta:
         verbose_name = 'leitura'
@@ -11,7 +10,7 @@ class Lection(models.Model):
         ordering = ('order',)
 
     def __str__(self):
-        return f'Dia {self.pk}'
+        return f'Dia {self.order}'
 
 
 class Versicle(models.Model):
@@ -26,6 +25,7 @@ class Versicle(models.Model):
     class Meta:
         verbose_name = 'versículo'
         verbose_name_plural = 'versículos'
+        ordering = ('book', 'chapter')
 
     def __str__(self):
         return f'{self.book_abbreviation} {self.chapter}:{self.number}'
