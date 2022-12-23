@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from bible.core.models import Versicle, Lection
+from bible.core.models import Versicle, Lection, Task
 
 
 class UserTest(TestCase):
@@ -39,4 +39,41 @@ class VersicleTest(TestCase):
         self.assertTrue(Versicle.objects.exists())
 
     def test_name(self):
-        self.assertEqual('Gn 1:1', str(self.versicle))
+        self.assertEqual('gn 1:1', str(self.versicle))
+
+
+class LectionTest(TestCase):
+    def setUp(self):
+        self.lection = Lection.objects.create(order=1)
+
+    def test_lection(self):
+        self.assertTrue(Lection.objects.exists())
+
+    def test_name(self):
+        self.assertEqual('dia 1', str(self.lection))
+
+
+class TaskTest(TestCase):
+    def setUp(self):
+        lection = Lection.objects.create(order=1)
+
+        Versicle.objects.create(
+            book='gênesis',
+            book_abbreviation='gn',
+            chapter=1,
+            number=1,
+            text='No princípio, Deus criou os céus e a terra.',
+            lection=lection)
+
+        user = User.objects.create(
+            username='thiago@assis.com',
+            password='1234567890',
+            email='thiago@assis.com')
+
+        self.task = Task.objects.create(user=user, lection=lection)
+
+    def test_tak(self):
+        self.assertTrue(Task.objects.exists())
+
+    def test_name(self):
+        self.assertEqual('tarefa: dia 1', str(self.task))

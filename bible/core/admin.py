@@ -1,12 +1,17 @@
 from django.contrib import admin
 
 from bible.core.actions import include_versicles
-from bible.core.models import Versicle, Lection
+from bible.core.models import Versicle, Lection, Task
 
 
 class VersicleInlineModel(admin.TabularInline):
     model = Versicle
     extra = 1
+
+
+@admin.register(Task)
+class TaskModelAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(Versicle)

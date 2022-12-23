@@ -1,12 +1,14 @@
+from datetime import datetime
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, render, resolve_url as r
 
 from bible.core.forms import SignInForm, SignUpForm
-from bible.core.models import Versicle
+from bible.core.models import Lection, Task
 
 
 def sign_in(request):
@@ -39,10 +41,13 @@ def sign_up(request):
             return render(request, 'sign_up.html', {'form': form})
 
         try:
-            User.objects.create_user(
+            user = User.objects.create_user(
                 username=form.cleaned_data['email'],
                 email=form.cleaned_data['email'],
                 password=form.cleaned_data['password'])
+
+            lection = Lection.objects.get(order=1)
+            Task.objects.create(user=user, lection=lection)
 
         except:
             messages.error(request, 'Usuário já existe.')
@@ -83,5 +88,30 @@ def reset_password(request):
 
 @login_required
 def home(request):
-    versicles = Versicle.objects.all()
-    return render(request, 'index.html', {'versicles': versicles})
+    tasks = Task.objects.all().order_by('-lection__order')
+    return render(request, 'index.html', {'tasks': tasks})
+
+
+@login_required
+def detail(request, pk):
+    task = Task.objects.get(pk=pk)
+
+    if request.method == 'POST':
+        task.completed = True
+        task.completed_at = datetime.now()
+        task.save()
+
+        # Create next task
+        try:
+            next_lection_order = task.lection.order + 1
+            lection = get_object_or_404(Lection, order=next_lection_order)
+
+            Task.objects.create(user=request.user, lection=lection)
+            messages.success(request, 'Próxima tarefa disponível.')
+
+        except Http404:
+            messages.error(request, 'Próxima tarefa não encontrada.')
+
+        return HttpResponseRedirect(r('home'))
+
+    return render(request, 'detail.html', {'task': task})

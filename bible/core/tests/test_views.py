@@ -276,4 +276,4 @@ class HomeGetTest(TestCase):
         self.client.force_login(user)
         resp = self.client.get(r('home'))
 
-        self.assertContains(resp, 'Gn 1:1')
+        self.assertContains(resp, 'gn 1:1')
