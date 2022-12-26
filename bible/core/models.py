@@ -25,6 +25,7 @@ class Book(models.Model):
     name = models.CharField('livro', max_length=150)
     abbreviation = models.CharField('abreviação', max_length=4)
     testament = models.CharField('testemunho', max_length=3, choices=TESTAMENT_CHOICES)
+    order = models.IntegerField('ordem', blank=True, null=True, default=None)
 
     class Meta:
         verbose_name = 'livro'
@@ -53,14 +54,14 @@ class Versicle(models.Model):
 
 
 class Task(models.Model):
-    pass
-#     completed = models.BooleanField('concluído', default=False)
-#     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='usuário', db_index=True)
-#     lection = models.ForeignKey('Lection', on_delete=models.CASCADE, verbose_name='leitura', db_index=True)
+    completed = models.BooleanField('concluído', default=False)
+    completed_at = models.DateField('completado em', default=None, blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, default=None, verbose_name='usuário', db_index=True)
+    lection = models.ForeignKey('Lection', on_delete=models.CASCADE, blank=True, null=True, default=None, verbose_name='leitura', db_index=True)
 
-#     class Meta:
-#         verbose_name = 'tarefa'
-#         verbose_name_plural = 'tarefas'
+    class Meta:
+        verbose_name = 'tarefa'
+        verbose_name_plural = 'tarefas'
 
-#     def __str__(self):
-#         return f'tarefa: {self.lection}'
+    def __str__(self):
+        return f'Tarefa: {self.lection}'

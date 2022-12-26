@@ -40,6 +40,7 @@ class LectionModelAdmin(admin.ModelAdmin):
     list_display = ['lection', 'books', 'chapters', 'order']
     search_fields = ('order__exact',)
     search_help_text = 'Buscar apenas pela ordem da leitura.'
+    list_per_page = 20
 
     def lection(self, obj):
         return str(obj)
@@ -79,23 +80,3 @@ class LectionModelAdmin(admin.ModelAdmin):
         return 'N/A'
 
     chapters.short_description = 'capítulos'
-
-    # def versicles(self, obj):
-    #     if versicles := obj.versicle_set.all():
-    #         first_versicle = versicles.first()
-    #         last_versicle = versicles[len(versicles) - 1]  # Check .last() methods
-
-    #         first_book = first_versicle.book_abbreviation
-    #         last_book = last_versicle.book_abbreviation
-
-    #         first_chapter = first_versicle.chapter
-    #         last_chapter = last_versicle.chapter
-
-    #         first_number = first_versicle.number
-    #         last_number = last_versicle.number
-
-    #         return f'{first_book} {first_chapter}:{first_number} - {last_book} {last_chapter}:{last_number}'
-
-    #     return 'N/A'
-
-    # versicles.short_description = 'versículos'

@@ -13,6 +13,7 @@
                     <h5 class="card-title mb-0">{{ task|title }}</h5>
                     {% if task.completed %}
                         <div class="badge bg-success my-2">Completado</div>
+                        <div class="badge bg-secondary my-2">{{ task.completed_at }}</div>
                     {% else %}
                         <div class="badge bg-primary my-2">Disponível</div>
                     {% endif %}
@@ -20,12 +21,8 @@
 
                 <div class="card-body px-4 py-2">
                     <p class="mb-0">
-                        Livro: {{ task.lection.versicle_set.first.book|title }}
-                        {% if task.lection.versicle_set.first.chapter == task.lection.versicle_set.last.chapter %}
-                            <br>Capítulo: {{ task.lection.versicle_set.first.chapter }}
-                        {% else %}
-                            <br>Capítulos: {{ task.lection.versicle_set.first.chapter }}-{{ task.lection.versicle_set.last.chapter }}
-                        {% endif %}
+                        Livros: {{ task.books|title }}
+                        <br>Capítulos: {{ task.chapters }}
                     </p>
                 </div>
 
