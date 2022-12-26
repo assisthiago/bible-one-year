@@ -3,43 +3,63 @@ from django.db import models
 
 
 class Lection(models.Model):
-    order = models.IntegerField('ordem')
+    pass
+#     order = models.IntegerField('ordem')
+
+#     class Meta:
+#         verbose_name = 'leitura'
+#         verbose_name_plural = 'leituras'
+#         ordering = ('order',)
+
+#     def __str__(self):
+#         return f'dia {self.order}'
+
+
+class Book(models.Model):
+    NEW_TESTAMENT = 'new'
+    OLD_TESTAMENT = 'old'
+    TESTAMENT_CHOICES = (
+        (OLD_TESTAMENT, 'antigo'),
+        (NEW_TESTAMENT, 'novo'),
+    )
+
+    name = models.CharField('livro', max_length=150)
+    abbreviation = models.CharField('abreviação', max_length=3)
+    testament = models.CharField('testemunho', max_length=3, choices=TESTAMENT_CHOICES)
 
     class Meta:
-        verbose_name = 'leitura'
-        verbose_name_plural = 'leituras'
-        ordering = ('order',)
+        verbose_name = 'livro'
+        verbose_name_plural = 'livros'
+        ordering = ('testament', 'name')
 
     def __str__(self):
-        return f'dia {self.order}'
+        return self.name.title()
 
 
 class Versicle(models.Model):
-    book = models.CharField('livro', max_length=150)
-    book_abbreviation = models.CharField('abreviação', max_length=3)
-    chapter = models.CharField('capítulo', max_length=3)
-    number = models.CharField('versículo', max_length=3)
+    chapter = models.IntegerField('capítulo')
+    number = models.IntegerField('número')
     text = models.TextField('texto', max_length=255)
-    lection = models.ForeignKey('Lection', on_delete=models.CASCADE, null=True, blank=True, verbose_name='leitura', db_index=True)
+    book = models.ForeignKey('Book', on_delete=models.CASCADE, verbose_name='livro')
 
     class Meta:
         verbose_name = 'versículo'
         verbose_name_plural = 'versículos'
-        ordering = ('book', 'chapter')
+        ordering = ('book__testament', 'book__name', 'chapter', 'number')
 
     def __str__(self):
-        return f'{self.book_abbreviation} {self.chapter}:{self.number}'.title()
+        return f'{self.book.abbreviation} {self.chapter}:{self.number}'.title()
 
 
 class Task(models.Model):
-    completed = models.BooleanField('concluído', default=False)
-    completed_at = models.TimeField('concluído em', blank=True, null=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='usuário', db_index=True)
-    lection = models.ForeignKey('Lection', on_delete=models.CASCADE, verbose_name='leitura', db_index=True)
+    pass
+#     completed = models.BooleanField('concluído', default=False)
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='usuário', db_index=True)
+#     lection = models.ForeignKey('Lection', on_delete=models.CASCADE, verbose_name='leitura', db_index=True)
 
-    class Meta:
-        verbose_name = 'tarefa'
-        verbose_name_plural = 'tarefas'
+#     class Meta:
+#         verbose_name = 'tarefa'
+#         verbose_name_plural = 'tarefas'
 
-    def __str__(self):
-        return f'tarefa: {self.lection}'
+#     def __str__(self):
+#         return f'tarefa: {self.lection}'
