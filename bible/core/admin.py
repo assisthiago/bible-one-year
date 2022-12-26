@@ -48,10 +48,9 @@ class LectionModelAdmin(admin.ModelAdmin):
     lection.short_description = 'leitura'
 
     def books(self, obj):
-        versicles = obj.versicle_set.all()
-        if versicles:
-            books = set(str(versicle.book) for versicle in versicles)
-            return ', '.join(sorted(books))
+        if books := obj.versicle_set.all().values_list(
+            'book__name', flat=True).order_by('book__order').distinct():
+                return ', '.join(books).title()
 
         return 'N/A'
 
@@ -59,23 +58,24 @@ class LectionModelAdmin(admin.ModelAdmin):
 
     def chapters(self, obj):
         versicles = obj.versicle_set.all()
+
         if versicles:
-            if len(books := set(str(versicle.book) for versicle in versicles)) > 1:
-                chapters_per_book = ''
-                for book in sorted(books, reverse=True):
-                    book_versicles = versicles.filter(book__name=book.lower())
-                    chapters = set(str(book_versicle.chapter) for book_versicle in book_versicles)
-                    if not chapters_per_book:
-                        chapters_per_book += ', '.join(sorted(chapters))
-                    else:
-                        chapters_per_book += ' - '
-                        chapters_per_book += ', '.join(sorted(chapters))
+            books = versicles.values_list(
+                'book__name', flat=True).order_by('book__order').distinct()
 
-                return chapters_per_book
+            display_chapters = ''
+            for book in books:
+                chapters = set(
+                    versicles.filter(book__name=book).values_list(
+                        'chapter', flat=True).order_by('chapter'))
 
-            else:
-                chapters = set(str(versicle.chapter) for versicle in versicles)
-                return ', '.join(sorted(chapters))
+                chapters = ', '.join(str(ch) for ch in chapters)
+                if display_chapters:
+                    display_chapters += ' - ' + chapters
+                else:
+                    display_chapters += chapters
+
+            return display_chapters
 
         return 'N/A'
 
