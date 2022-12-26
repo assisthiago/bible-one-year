@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 
+from bible.core.models import Versicle
+
 
 class SignInForm(forms.Form):
     email = forms.EmailField(label='E-mail')
@@ -43,3 +45,4 @@ class SignUpForm(SignInForm):
         super().__init__(*args, **kwargs)
         self.fields['password_confirmation'].widget.attrs['class'] = 'form-control form-control-lg'
         self.fields['password_confirmation'].widget.attrs['placeholder'] = 'Confirme sua senha'
+

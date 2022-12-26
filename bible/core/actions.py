@@ -5,7 +5,7 @@ from django.utils.translation import ngettext
 from bible.core.models import Lection, Versicle
 
 
-@admin.action(description='Incluir versículos')
+@admin.action(description='Incluir versículos na leitura')
 def include_versicles(modeladmin, request, queryset):
     context = dict(
         modeladmin.admin_site.each_context(request),

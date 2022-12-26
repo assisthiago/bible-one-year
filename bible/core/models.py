@@ -3,16 +3,15 @@ from django.db import models
 
 
 class Lection(models.Model):
-    pass
-#     order = models.IntegerField('ordem')
+    order = models.IntegerField('ordem')
 
-#     class Meta:
-#         verbose_name = 'leitura'
-#         verbose_name_plural = 'leituras'
-#         ordering = ('order',)
+    class Meta:
+        verbose_name = 'leitura'
+        verbose_name_plural = 'leituras'
+        ordering = ('order',)
 
-#     def __str__(self):
-#         return f'dia {self.order}'
+    def __str__(self):
+        return f'{self.order}a. Leitura'
 
 
 class Book(models.Model):
@@ -24,7 +23,7 @@ class Book(models.Model):
     )
 
     name = models.CharField('livro', max_length=150)
-    abbreviation = models.CharField('abreviação', max_length=3)
+    abbreviation = models.CharField('abreviação', max_length=4)
     testament = models.CharField('testemunho', max_length=3, choices=TESTAMENT_CHOICES)
 
     class Meta:
@@ -41,6 +40,8 @@ class Versicle(models.Model):
     number = models.IntegerField('número')
     text = models.TextField('texto', max_length=255)
     book = models.ForeignKey('Book', on_delete=models.CASCADE, verbose_name='livro')
+    lection = models.ForeignKey('Lection', on_delete=models.CASCADE, blank=True, null=True, verbose_name='leitura')
+
 
     class Meta:
         verbose_name = 'versículo'
