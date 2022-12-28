@@ -110,9 +110,10 @@ def home(request):
         context['tasks'].append({
             'obj': task,
             'books': books,
-            'chapters': display_chapters
+            'chapters': display_chapters,
         })
 
+    context['progress'] = str(0.27 * len(tasks)).replace(',', '.')
     return render(request, 'index.html', context)
 
 

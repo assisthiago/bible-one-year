@@ -23,14 +23,13 @@
                         {% endif %}
                     </div>
 
-                    {% for versicle in versicles %}
-                        <div class="card-body px-4 pt-0 pb-4">
-                            <p class="mb-0">
-                                <span class="badge bg-primary">{{ versicle }}</span>
-                                {{ versicle.text }}
-                            </p>
+                    <div class="card-body px-4 pt-0 pb-4">
+                        <p class="mb-0">
+                            {% for versicle in versicles %}
+                                <strong>{{ versicle }}</strong> {{ versicle.text }}
+                            {% endfor %}
+                        </p>
                         </div>
-                    {% endfor %}
 
                 </div>
             {% endfor %}
