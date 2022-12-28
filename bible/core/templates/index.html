@@ -10,10 +10,10 @@
         <div class="col-12 col-md-6 col-lg-3">
             <div class="card">
                 <div class="card-header px-4 pt-4">
-                    <h5 class="card-title mb-0">{{ task|title }}</h5>
-                    {% if task.completed %}
+                    <h5 class="card-title mb-0">{{ task.obj|title }}</h5>
+                    {% if task.obj.completed %}
                         <div class="badge bg-success my-2">Completado</div>
-                        <div class="badge bg-secondary my-2">{{ task.completed_at }}</div>
+                        <div class="badge bg-secondary my-2">{{ task.obj.completed_at }}</div>
                     {% else %}
                         <div class="badge bg-primary my-2">Disponível</div>
                     {% endif %}
@@ -21,7 +21,7 @@
 
                 <div class="card-body px-4 py-2">
                     <p class="mb-0">
-                        Livros: {{ task.books|title }}
+                        Livros: {{ task.books|join:", "|title }}
                         <br>Capítulos: {{ task.chapters }}
                     </p>
                 </div>
@@ -29,7 +29,7 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item px-4 pb-4">
                         <p class="mb-2 fw-bold">
-                            <a href="tasks/{{ task.id }}" class="btn btn-sm btn-primary float-end">Ler</a>
+                            <a href="tasks/{{ task.obj.id }}" class="btn btn-sm btn-primary float-end">Ler</a>
                         </p>
                     </li>
                 </ul>

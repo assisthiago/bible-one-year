@@ -88,8 +88,32 @@ def reset_password(request):
 
 @login_required
 def home(request):
+    context = {'tasks': []}
+
     tasks = Task.objects.all().order_by('-lection__order')
-    return render(request, 'index.html', {'tasks': tasks})
+    for task in tasks:
+        books = task.lection.versicle_set.values_list(
+            'book__name', flat=True).order_by('book__order').distinct()
+
+        display_chapters = ''
+        for book in books:
+            chapters = set(
+                task.lection.versicle_set.filter(book__name=book).values_list(
+                    'chapter', flat=True).order_by('chapter'))
+
+            chapters = ', '.join(str(ch) for ch in chapters)
+            if display_chapters:
+                display_chapters += ' - ' + chapters
+            else:
+                display_chapters += chapters
+
+        context['tasks'].append({
+            'obj': task,
+            'books': books,
+            'chapters': display_chapters
+        })
+
+    return render(request, 'index.html', context)
 
 
 @login_required
