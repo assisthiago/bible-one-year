@@ -138,4 +138,16 @@ def detail(request, pk):
 
         return HttpResponseRedirect(r('home'))
 
-    return render(request, 'detail.html', {'task': task})
+
+    books = task.lection.versicle_set.values_list(
+        'book__name', flat=True).order_by('book__order').distinct()
+
+    lections = []
+    for book in books:
+        chapters = task.lection.versicle_set.filter(
+            book__name=book).order_by('chapter', 'number')
+
+        lections.append({book: chapters})
+
+    context = {'task': task, 'lections': lections}
+    return render(request, 'detail.html', context)
