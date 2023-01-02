@@ -38,16 +38,6 @@
                             {% endif %}
                         </div>
                     </div>
-                    <div class="form-row field-number">
-                        <div>
-                            <label class="required" for="id_numbers">Versículos:</label>
-                            {% if queryset.first.number == queryset.last.number %}
-                                <input type="text" value="{{ queryset.first.number }}" class="vTextField" maxlength="150" readonly id="id_numbers">
-                            {% else %}
-                                <input type="text" value="{{ queryset.first.number }} - {{ queryset.last.number }}" class="vTextField" maxlength="150" readonly id="id_numbers">
-                            {% endif %}
-                        </div>
-                    </div>
                     <div class="form-row field-lection">
                         <div>
                             <label class="required" for="id_lection">Leitura</label>
