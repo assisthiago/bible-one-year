@@ -21,7 +21,7 @@ class VersicleInlineModel(admin.TabularInline):
 class VersicleModelAdmin(admin.ModelAdmin):
     actions = [include_versicles]
     list_display = ['versicle', 'book', 'chapter', 'number']
-    list_filter = ['book__testament', 'book']
+    list_filter = ['book__testament', 'book__name']
     list_per_page = 1000
 
     search_fields = ('book__abbreviation', 'chapter')
