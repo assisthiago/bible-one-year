@@ -69,7 +69,7 @@ class LectionModelAdmin(admin.ModelAdmin):
                     versicles.filter(book__name=book).values_list(
                         'chapter', flat=True).order_by('chapter'))
 
-                chapters = ', '.join(str(ch) for ch in chapters)
+                chapters = ', '.join(str(ch) for ch in sorted(chapters))
                 if display_chapters:
                     display_chapters += ' - ' + chapters
                 else:
