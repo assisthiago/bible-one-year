@@ -7,7 +7,8 @@ from bible.core.models import Book, Versicle, Lection, Task
 @admin.register(Book)
 class BookModelAdmin(admin.ModelAdmin):
     list_display = ['name', 'abbreviation', 'testament']
-    list_filter = ['testament', 'name']
+    list_filter = ['testament']
+    search_fields = ('name', 'abbreviation')
 
 
 class VersicleInlineModel(admin.TabularInline):
