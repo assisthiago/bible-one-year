@@ -23,7 +23,7 @@ class VersicleModelAdmin(admin.ModelAdmin):
     actions = [include_versicles]
     list_display = ['versicle', 'book', 'chapter', 'number']
     list_filter = ['book__testament', 'book__name']
-    list_per_page = 1000
+    list_per_page = 300
 
     search_fields = ('book__abbreviation', 'chapter')
     search_help_text = 'Formato da busca: 1jo 1.'
