@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, render, resolve_url as r
 
 from bible.core.forms import SignInForm, SignUpForm
-from bible.core.models import Lection, Task
+from bible.core.models import Book, Lection, Task
 
 
 def sign_in(request):
@@ -135,7 +135,7 @@ def detail(request, pk):
             messages.success(request, 'Próxima tarefa disponível.')
 
         except Http404:
-            messages.error(request, 'Próxima tarefa não encontrada.')
+            pass
 
         return HttpResponseRedirect(r('home'))
 
@@ -152,3 +152,14 @@ def detail(request, pk):
 
     context = {'task': task, 'lections': lections}
     return render(request, 'detail.html', context)
+
+
+@login_required
+def book(request, abbreviation):
+    try:
+        book = get_object_or_404(Book, abbreviation=abbreviation)
+        return render(request, 'book.html', {'book': book})
+
+    except Http404:
+        messages.error(request, f'Livro não encontrado.')
+        return HttpResponseRedirect(r('sign-in'))
