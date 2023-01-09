@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+from bible.core.managers import BookTestamentQuerySet
+
 
 class Lection(models.Model):
     order = models.IntegerField('ordem')
@@ -27,10 +29,12 @@ class Book(models.Model):
     testament = models.CharField('testemunho', max_length=3, choices=TESTAMENT_CHOICES)
     order = models.IntegerField('ordem', blank=True, null=True, default=None)
 
+    objects = BookTestamentQuerySet.as_manager()
+
     class Meta:
         verbose_name = 'livro'
         verbose_name_plural = 'livros'
-        ordering = ('order',)
+        ordering = ('-testament', 'name')
 
     def __str__(self):
         return self.name.title()

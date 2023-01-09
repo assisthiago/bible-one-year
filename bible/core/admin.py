@@ -1,7 +1,8 @@
 from django.contrib import admin
+from django.template.response import TemplateResponse
+from django.urls import path
 
-from bible.core.actions import include_versicles
-from bible.core.models import Book, Versicle, Lection, Task
+from bible.core.models import Book, Versicle, Lection
 
 
 @admin.register(Book)
@@ -20,7 +21,6 @@ class VersicleInlineModel(admin.TabularInline):
 
 @admin.register(Versicle)
 class VersicleModelAdmin(admin.ModelAdmin):
-    actions = [include_versicles]
     list_display = ['versicle', 'book', 'chapter', 'number']
     list_filter = ['book__testament', 'book__name']
     list_per_page = 300
@@ -36,6 +36,8 @@ class VersicleModelAdmin(admin.ModelAdmin):
 
 @admin.register(Lection)
 class LectionModelAdmin(admin.ModelAdmin):
+    change_list_template = 'admin/lection/changelist.html'
+
     inlines = [VersicleInlineModel]
 
     list_display = ['lection', 'books', 'chapters', 'order']
@@ -81,3 +83,21 @@ class LectionModelAdmin(admin.ModelAdmin):
         return 'N/A'
 
     chapters.short_description = 'capítulos'
+
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path('include/', self.admin_site.admin_view(self.include_versicles), name='core_lection_include_versicles'),
+        ]
+        return my_urls + urls
+
+    def include_versicles(self, request):
+        context = dict(self.admin_site.each_context(request),)
+        lections = Lection.objects.all()
+
+        context['old_testament'] = Book.objects.old_testament()
+        context['new_testament'] = Book.objects.new_testament()
+        context['lections'] = lections
+        context['title'] = 'Incluir versículos na leitura'
+
+        return TemplateResponse(request, 'admin/lection/include_versicles.html', context)

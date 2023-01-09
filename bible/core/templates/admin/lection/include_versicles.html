@@ -1,0 +1,73 @@
+{% extends "admin/base_site.html" %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="/admin/">Início</a>
+    › <a href="/admin/core/">Core</a>
+    › <a href="/admin/core/lection/">Leituras</a>
+    › {{ title }}
+    </div>
+
+{% endblock %}
+
+{% block content %}
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'admin/css/forms.css' %}">
+
+    <div id="content-main">
+        <form action="" method="post" id="versicle_in_lection">
+            {% csrf_token %}
+
+            <div>
+                <fieldset class="module aligned">
+                    <div class="form-row field-lection">
+                        <div>
+                            <label class="required" for="id_lection">Leitura</label>
+                            <select name="lection" id="id_lection" required="">
+                                <option value="" selected="">---------</option>
+                                {% for lection in lections %}
+                                    <option value="{{ lection.order }}">{{ lection.order }}a. Leitura</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row field-book">
+                        <div>
+                            <label class="required" for="id_book">Livro:</label>
+                            <select name="book" id="id_book" required="">
+                                <option value="" selected="">---------</option>
+                                {% for book in old_testament %}
+                                <option value="{{ book.pk }}">{{ book.name|title }} - Antigo Testamento</option>
+                                {% endfor %}
+
+                                {% for book in new_testament %}
+                                    <option value="{{ book.pk }}">{{ book.name|title }} - Novo Testamento</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row field-chapter">
+                        <div>
+                            <label class="required" for="id_chapters">Capítulos:</label>
+                            <input type="text" value="" class="vTextField" maxlength="150" id="id_chapters" placeholder="1-100" required="">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="submit-row">
+                    <input type="hidden" name="action" value="{{ action_name }}"/>
+                    <input type="hidden" name="post" value="yes"/>
+
+                    <input type="submit" value="Salvar" class="default" name="_save"/>
+                    <input type="submit" value="Salvar e adicionar outro(a)" name="_addanother">
+                    <p class="deletelink-box"><a href="{% url 'admin:core_lection_changelist' %}" class="deletelink">Cancelar</a></p>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+{% endblock %}
