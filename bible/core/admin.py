@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.template.response import TemplateResponse
 from django.urls import path
 
+from bible.core.forms import IncludeVersiclesForm
 from bible.core.models import Book, Versicle, Lection
 
 
@@ -99,5 +100,7 @@ class LectionModelAdmin(admin.ModelAdmin):
         context['new_testament'] = Book.objects.new_testament()
         context['lections'] = lections
         context['title'] = 'Incluir versículos na leitura'
+
+        context['form'] = IncludeVersiclesForm
 
         return TemplateResponse(request, 'admin/lection/include_versicles.html', context)

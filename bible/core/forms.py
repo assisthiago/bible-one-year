@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 
-from bible.core.models import Versicle
+from bible.core.models import Book, Lection, Versicle
 
 
 class SignInForm(forms.Form):
@@ -46,3 +46,12 @@ class SignUpForm(SignInForm):
         self.fields['password_confirmation'].widget.attrs['class'] = 'form-control form-control-lg'
         self.fields['password_confirmation'].widget.attrs['placeholder'] = 'Confirme sua senha'
 
+
+class IncludeVersiclesForm(forms.Form):
+    lection = forms.ChoiceField(
+        label='Leitura', choices=Lection.objects.values_list('order', 'order'))
+
+    book = forms.ChoiceField(
+        label='Livros', choices=Book.objects.values_list('pk', 'name'))
+
+    chapters = forms.CharField(label='Capítulos', help_text='Ex.: 1-100')
