@@ -113,7 +113,7 @@ def home(request):
             'chapters': display_chapters,
         })
 
-    context['progress'] = str(0.27 * len(tasks)).replace(',', '.')
+    context['progress'] = str(0.30 * len(tasks)).replace(',', '.')
     return render(request, 'index.html', context)
 
 
