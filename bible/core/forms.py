@@ -48,10 +48,16 @@ class SignUpForm(SignInForm):
 
 
 class IncludeVersiclesForm(forms.Form):
+    # LECTIONS = Lection.objects.values_list('order', 'order')
+    # BOOKS = Book.objects.values_list('pk', 'name')
+
+    LECTIONS = [(order, order) for order in range(1, 333)]
+    BOOKS = []
+
     lection = forms.ChoiceField(
-        label='Leitura', choices=Lection.objects.values_list('order', 'order'))
+        label='Leitura', choices=LECTIONS)
 
     book = forms.ChoiceField(
-        label='Livros', choices=Book.objects.values_list('pk', 'name'))
+        label='Livros', choices=BOOKS)
 
     chapters = forms.CharField(label='Capítulos', help_text='Ex.: 1-100')
