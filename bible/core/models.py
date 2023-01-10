@@ -34,7 +34,7 @@ class Book(models.Model):
     class Meta:
         verbose_name = 'livro'
         verbose_name_plural = 'livros'
-        ordering = ('-testament', 'name')
+        ordering = ('testament', 'order')
 
     def __str__(self):
         return self.name.title()
@@ -54,7 +54,7 @@ class Versicle(models.Model):
         ordering = ('book__testament', 'book__name', 'chapter', 'number')
 
     def __str__(self):
-        return f'{self.book.abbreviation} {self.chapter}:{self.number}'.title()
+        return f'{self.book.abbreviation} {self.chapter},{self.number}'.title()
 
 
 class Task(models.Model):

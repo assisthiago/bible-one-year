@@ -1,4 +1,6 @@
-from django.contrib import admin
+from django.contrib import admin, messages
+from django.http import HttpResponseRedirect
+from django.shortcuts import resolve_url as r
 from django.template.response import TemplateResponse
 from django.urls import path
 
@@ -8,9 +10,20 @@ from bible.core.models import Book, Versicle, Lection
 
 @admin.register(Book)
 class BookModelAdmin(admin.ModelAdmin):
-    list_display = ['name', 'abbreviation', 'testament']
+    list_display = ['name', 'abbreviation', 'chapters', 'testament', 'order']
     list_filter = ['testament']
     search_fields = ('name', 'abbreviation')
+
+    def chapters(self, obj):
+        versicles = obj.versicle_set.all()
+        if versicles:
+            last_chapter = versicles.last().chapter
+
+            return last_chapter
+
+        return 'N/A'
+
+    chapters.short_description = 'capítulos'
 
 
 class VersicleInlineModel(admin.TabularInline):
@@ -101,6 +114,34 @@ class LectionModelAdmin(admin.ModelAdmin):
         context['lections'] = lections
         context['title'] = 'Incluir versículos na leitura'
 
-        context['form'] = IncludeVersiclesForm
+        if request.method == 'POST':
+            form = IncludeVersiclesForm(request.POST)
+            context['form'] = form
 
+            if not form.is_valid():
+                self.message_user(
+                    request, 'Erro ao incluir os versísculos na leitura.', messages.ERROR)
+                return TemplateResponse(request, 'admin/lection/include_versicles.html', context)
+
+            lection = Lection.objects.get(pk=form.cleaned_data.get('lection'))
+            book = Book.objects.get(pk=form.cleaned_data.get('book'))
+
+            init, final = form.cleaned_data.get('chapters').split('-')
+            versicles = book.versicle_set.filter(
+                chapter__gte=init, chapter__lte=final)
+
+            for versicle in versicles:
+                versicle.lection = lection
+
+            Versicle.objects.bulk_update(versicles, ['lection'])
+
+            self.message_user(
+                request, 'Versísculos incluídos na leitura.', messages.SUCCESS)
+
+            if '_addanother' in request.POST:
+                return TemplateResponse(request, 'admin/lection/include_versicles.html', context)
+            else:
+                return HttpResponseRedirect(r('admin:core_lection_changelist'))
+
+        context['form'] = IncludeVersiclesForm
         return TemplateResponse(request, 'admin/lection/include_versicles.html', context)
