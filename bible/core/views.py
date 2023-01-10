@@ -90,7 +90,7 @@ def reset_password(request):
 def home(request):
     context = {'tasks': []}
 
-    tasks = Task.objects.all().order_by('-lection__order')
+    tasks = Task.objects.filter(user=request.user).order_by('-lection__order')
     for task in tasks:
         books = task.lection.versicle_set.values_list(
             'book__name', flat=True).order_by('book__order').distinct()
@@ -119,7 +119,7 @@ def home(request):
 
 @login_required
 def detail(request, pk):
-    task = Task.objects.get(pk=pk)
+    task = Task.objects.get(user=request.user, pk=pk)
 
     if request.method == 'POST':
         task.completed = True
