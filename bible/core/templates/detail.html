@@ -29,7 +29,7 @@
                                 <strong>{{ versicle }}</strong> {{ versicle.text }}
                             {% endfor %}
                         </p>
-                        </div>
+                    </div>
 
                 </div>
             {% endfor %}
@@ -40,7 +40,8 @@
     {% if not task.completed %}
         <form action="{% url 'detail' pk=task.pk %}" method="post">
             {% csrf_token %}
-            <input class="btn btn-primary" type="submit" value="Completar">
+            <input class="btn btn-success" type="submit" value="Completar" name="complete">
+            <input class="btn btn-primary" type="submit" value="Completar e ler a próxima" name="next">
         </form>
     {% else %}
         <a href="{% url 'home' %}" class="btn btn-link">Voltar</a>

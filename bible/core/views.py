@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import get_object_or_404, render, resolve_url as r
+from django.shortcuts import get_object_or_404, render, redirect, resolve_url as r
 
 from bible.core.forms import SignInForm, SignUpForm
 from bible.core.models import Book, Lection, Task
@@ -131,14 +131,16 @@ def detail(request, pk):
             next_lection_order = task.lection.order + 1
             lection = get_object_or_404(Lection, order=next_lection_order)
 
-            Task.objects.create(user=request.user, lection=lection)
+            new_task = Task.objects.create(user=request.user, lection=lection)
             messages.success(request, 'Próxima tarefa disponível.')
 
         except Http404:
             pass
 
-        return HttpResponseRedirect(r('home'))
+        if 'next' in request.POST:
+            return redirect('detail', pk=new_task.pk)
 
+        return HttpResponseRedirect(r('home'))
 
     books = task.lection.versicle_set.values_list(
         'book__name', flat=True).order_by('book__order').distinct()
