@@ -24,11 +24,11 @@
                     </div>
 
                     <div class="card-body px-4 pt-0 pb-4">
-                        <p class="mb-0">
-                            {% for versicle in versicles %}
+                        {% for versicle in versicles %}
+                            <p class="mb-1 fs-1rem">
                                 <strong>{{ versicle }}</strong> {{ versicle.text }}
-                            {% endfor %}
-                        </p>
+                            </p>
+                        {% endfor %}
                     </div>
 
                 </div>
