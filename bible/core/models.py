@@ -43,7 +43,7 @@ class Book(models.Model):
 class Versicle(models.Model):
     chapter = models.IntegerField('capítulo')
     number = models.IntegerField('número')
-    text = models.TextField('texto', max_length=255)
+    text = models.TextField('texto', max_length=350)
     book = models.ForeignKey('Book', on_delete=models.CASCADE, verbose_name='livro')
     lection = models.ForeignKey('Lection', on_delete=models.CASCADE, blank=True, null=True, verbose_name='leitura')
 
